@@ -50,12 +50,19 @@ app.use( ( err, req, res, next ) => {
 
     // 未知错误
     res.cc( err );
+    next();
 })
 
 
 // 导入和使用用户路由模块
 const userRouter = require( './router/user' );
 app.use( '/api', userRouter );
+
+
+// 导入并使用用户信息路由模块
+const userinfoRouter = require( './router/userinfo' );
+// 以/my开头的接口，都是有权限的接口，需要进行token身份认证
+app.use( '/my', userinfoRouter );
 
 
 // 调用 app.listen 方法，指定端口号并启动web服务器
