@@ -8,7 +8,7 @@ const bcrypt = require( 'bcryptjs' );
 //定义sql语句
 // 根据用户的id，查询用户的基本信息
 // 注：为防止用户密码泄露，需排除password
-const sql = 'select id, username, nickname, user_pic from ev_users where id=?';
+const sql = 'select id, username, nickname,email, user_pic from ev_users where id=?';
 
 // 获取用户基本信息的处理函数
 exports.getUserInfo = ( req, res ) => {
