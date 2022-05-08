@@ -8,6 +8,7 @@ const joi = require( '@hapi/joi' );
 
 //导入cors中间件
 const cors = require( 'cors' );
+
 //将cors注册为全局中间件
 app.use( cors() );
 
@@ -15,7 +16,7 @@ app.use( cors() );
 // 配置解析表单数据中间件,只能解析application/x-www-form-urlencoded格式数据
 app.use( express.urlencoded( { extended: false } ) );
 
-
+// 一定要在路由之前封装res.cc函数
 //手动封装res.cc()函数，来向客户端响应处理失败的结果
 // 响应数据的中间件
 app.use( ( req, res, next ) => {
@@ -31,13 +32,42 @@ app.use( ( req, res, next ) => {
     next();
 })
 
-// 配置解析token中间件
+// 在路由之前配置解析token中间件
 // 导入秘钥文件
 const config = require( './config' );
 //解析token中间件
 const expressJWT = require( 'express-jwt' );
 //使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
 app.use( expressJWT( { secret: config.jwtSecretKey } ).unless( { path: [ /^\/api\// ] } ) );
+
+
+
+//托管静态资源
+app.use('/uploads',express.static('../api_sever/upload'))
+
+
+// 导入和使用用户路由模块
+const userRouter = require( './router/user' );
+app.use( '/api', userRouter );
+
+
+// 导入并使用用户信息路由模块
+const userinfoRouter = require( './router/userinfo' );
+// 以/my开头的接口，都是有权限的接口，需要进行token身份认证
+app.use( '/my', userinfoRouter );
+
+
+// 导入并使用文章分类路由模块
+const artCateRouter = require( './router/artcate' );
+//为文章分类的路由统一挂载访问前缀 /my/article
+app.use( '/my/article', artCateRouter );
+
+
+// 文章的路由模块
+const articleRouter = require( './router/article' );
+// 为文章的路由挂载统一的访问前缀
+app.use( '/my/article', articleRouter );
+
 
 
 // 定义错误级别的中间件
@@ -53,16 +83,6 @@ app.use( ( err, req, res, next ) => {
     next();
 })
 
-
-// 导入和使用用户路由模块
-const userRouter = require( './router/user' );
-app.use( '/api', userRouter );
-
-
-// 导入并使用用户信息路由模块
-const userinfoRouter = require( './router/userinfo' );
-// 以/my开头的接口，都是有权限的接口，需要进行token身份认证
-app.use( '/my', userinfoRouter );
 
 
 // 调用 app.listen 方法，指定端口号并启动web服务器

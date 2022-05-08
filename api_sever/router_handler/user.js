@@ -87,7 +87,7 @@ exports.login = ( req, res ) => {
         const compareResult = bcrypt.compareSync( userinfo.password, results[ 0 ].password );
         // 如果比较的结果为false，则输出密码错误
         if ( !compareResult ) {
-            res.cc( '密码错误' );
+           return res.cc( '密码错误' );     //加入return，避免服务器多次响应报错
         }
         // 生成JWT的token字符串
         //利用扩展运算符，剔除密码和头像的值
