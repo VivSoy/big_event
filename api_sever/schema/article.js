@@ -17,3 +17,28 @@ exports.add_article_schema = {
         state
     }
 }
+
+// 定义id的验证规则
+const id = joi.number().integer().min( 1 ).required();
+
+exports.delete_article_schema = {
+    params: {
+        id
+    }
+}
+
+exports.get_article_schema = {
+    params: {
+        id
+    }
+}
+
+exports.update_article_schema = {
+    body: {
+        id,
+        title,
+        cate_id,
+        content,
+        state
+    }
+}

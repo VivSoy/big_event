@@ -12,7 +12,7 @@ exports.getArticleCates = ( req, res ) => {
     db.query( sql, ( err, results ) => {
         if ( err ) return res.cc( err );
         res.send( {
-            staus: 0,
+            status: 0,
             message: '获取文章分类列表成功',
             data: results,
         } )
@@ -86,9 +86,10 @@ exports.deleteCateById = ( req, res ) => {
         if ( err ) return res.cc( err );
 
         // 执行SQL语句成功，但影响行数不为1
-        if ( results.affectedRows !== 1 ) return res.cc( '删除文章分类失败！' );
-
-        res.cc( '删除文章分类成功' )
+        if ( results.affectedRows !== 1 ) {
+            return res.cc( '删除文章分类失败！' );
+        }
+        res.cc( '删除文章分类成功', 0)
 
     } )
 }

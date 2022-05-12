@@ -23,6 +23,14 @@ const article_handler = require( '../router_handler/article' );
 //引入增加文章的验证模块
 const { add_article_schema } = require( '../schema/article' );
 
+// 导入删除文章的验证模块
+const { delete_article_schema } = require( '../schema/article' );
+
+// 导入根据id获取文章验证模块
+const { get_article_schema } = require( '../schema/article' );
+
+// 导入根据id更新文章验证模块
+const { update_article_schema } = require( '../schema/article' );
 
 // 发布新文章的路由
 // upload.single() 是一个局部生效的中间件，用来解析 FormData 格式的表单数据
@@ -30,7 +38,17 @@ const { add_article_schema } = require( '../schema/article' );
 // 将文本类型的数据，解析并挂载到 req.body 属性中
 router.post( '/add', upload.single('cover_img'),expressJoi(add_article_schema),article_handler.addArticle );
 
+// 获取文章的列表的路由
+router.get( '/list',article_handler.getArticleList );
 
+// 根据id删除文章数据
+router.get( '/delete/:id',expressJoi(delete_article_schema) , article_handler.deleteArticleById );
+
+// 根据id获取文章数据
+router.get('/:id',expressJoi(get_article_schema),article_handler.getArticleById)
+
+// 根据id更新文章数据
+router.post( '/edit', upload.single('cover_img'),expressJoi(update_article_schema),article_handler.updateArticleById );
 
 // 向外共享路由
 module.exports = router;
